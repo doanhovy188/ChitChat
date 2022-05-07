@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ChitChat</string>
+    <string name="a_verify_picture">A verify picture</string>
+    <string name="verify_your_phone_number">Verify your phone number</string>
+    <string name="we_will_send_a_sms_to_your_phone">We will send a SMS to your phone</string>
+    <string name="ok">OK</string>
+    <string name="type_the_number_you_received_here">Type the number you received here</string>
+    <string name="type_your_phone_number_here">Type your phone number here</string>
+    <string name="type_it_below">Type it below</string>
+    <string name="an_otp_be_sent_to">An OTP be sent to</string>
+    <string name="profile_info">Profile info</string>
+    <string name="type_your_name_here">Type your name here</string>
+    <string name="continueText">continue</string>
+    <string name="setup_profile">setup profile</string>
+    <string name="please_set_your_name_and_your_avatar">Please set your name and your avatar</string>
+</resources>
