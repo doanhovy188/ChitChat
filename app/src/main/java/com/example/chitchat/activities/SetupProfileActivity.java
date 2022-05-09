@@ -1,11 +1,9 @@
-package com.example.chitchat;
+package com.example.chitchat.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.SupportActionModeWrapper;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.chitchat.databinding.ActivitySetupProfileBinding;
+import com.example.chitchat.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -23,11 +22,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.security.AuthProvider;
 import java.util.Objects;
 
 public class SetupProfileActivity extends AppCompatActivity {
 
+    //    ActivitySetupProfileBinding binding;
     ActivitySetupProfileBinding binding;
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -60,7 +59,7 @@ public class SetupProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-                startActivityForResult(intent, 45);
+                startActivityForResult(intent,45);
             }
         });
 
@@ -88,18 +87,18 @@ public class SetupProfileActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String uid = auth.getUid();
                                         String avatarUrl = uri.toString();
-                                        String phoneNumber = auth.getCurrentUser().getPhoneNumber();
                                         String name = binding.inputName.getText().toString();
-                                        User user = new User(uid, name, phoneNumber, avatarUrl);
+                                        User user = new User(uid, name, Login.PHONENUMBER, Login.PASSWORD, avatarUrl);
                                         Log.e("log", user.toString());
                                         database.getReference()
                                                 .child("users")
+                                                .child(Login.PHONENUMBER)
                                                 .setValue(user)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
                                                         dialog.dismiss();
-                                                        Intent intent = new Intent(SetupProfileActivity.this, MainActivity.class);
+                                                        Intent intent = new Intent(SetupProfileActivity.this, Login.class);
                                                         startActivity(intent);
                                                         finish();
                                                     }
@@ -111,18 +110,18 @@ public class SetupProfileActivity extends AppCompatActivity {
                     });
                 } else {
                     String uid = auth.getUid();
-                    String avatarUrl = "No image";
-                    String phoneNumber = auth.getCurrentUser().getPhoneNumber();
-                    User user = new User(uid, name, phoneNumber, avatarUrl);
+                    String avatarUrl = "https://firebasestorage.googleapis.com/v0/b/chitchat-3f357.appspot.com/o/Profiles%2Favatar.png?alt=media&token=59085f17-ff6e-4bdb-ace7-13cce345a5fd";
+                    User user = new User(uid, name, Login.PHONENUMBER, Login.PHONENUMBER, avatarUrl);
                     Log.e("log", user.toString());
                     database.getReference()
                             .child("users")
+                            .child(Login.PHONENUMBER)
                             .setValue(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(SetupProfileActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(SetupProfileActivity.this, Login.class);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -137,7 +136,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data != null) {
+        if (data != null) {
             if (data.getData() != null) {
                 binding.avatarImageView.setImageURI(data.getData());
                 selectedImageUri = data.getData();

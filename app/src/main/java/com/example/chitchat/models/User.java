@@ -1,17 +1,26 @@
-package com.example.chitchat;
+package com.example.chitchat.models;
 
 public class User {
-    private String userID, name, phoneNumber, avatar;
+    private String userID, name, phoneNumber, password, avatar;
 
-    public User(){
+    public User() {
 
     }
 
-    public User(String userID, String name, String phoneNumber, String avatar) {
+    public User(String userID, String name, String phoneNumber, String password, String avatar) {
         this.userID = userID;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.password = password;
         this.avatar = avatar;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUserID() {
@@ -46,7 +55,7 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String toString(){
-        return userID + "\n" + name + "\n" + phoneNumber + "\n" + avatar + "\n";
+    public String toString() {
+        return userID + "\n" + name + "\n" + phoneNumber + "\n" + password + "\n" + avatar + "\n";
     }
 }

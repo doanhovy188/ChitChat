@@ -1,14 +1,14 @@
-package com.example.chitchat;
+package com.example.chitchat.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.compose.runtime.Composable;
-import androidx.compose.ui.platform.ComposeView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.chitchat.databinding.ActivityVerifyBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -30,8 +30,9 @@ public class VerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(VerifyActivity.this, OTPActivity.class);
-                intent.putExtra("phoneNumber", binding.inputPhoneNumber.getText().toString());
+                Login.PHONENUMBER = binding.inputPhoneNumber.getText().toString();
                 startActivity(intent);
+                finish();
             }
         });
     }

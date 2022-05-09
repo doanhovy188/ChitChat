@@ -1,4 +1,4 @@
-package com.example.chitchat;
+package com.example.chitchat.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,10 +7,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.example.chitchat.R;
 import com.example.chitchat.databinding.ActivityOtpactivityBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,17 +54,17 @@ public class OTPActivity extends AppCompatActivity {
         binding.otpView.post(new Runnable() {
             @Override
             public void run() {
-                binding.otpView.setItemWidth(binding.otpView.getWidth()/7);
+                binding.otpView.setItemWidth(binding.otpView.getWidth() / 7);
             }
         });
 
-        String phoneNumber = getIntent().getStringExtra("phoneNumber");
+        String phoneNumber = Login.PHONENUMBER;
         String verifyText = getResources().getString(R.string.an_otp_be_sent_to) + " " + phoneNumber;
         binding.verifyTextView.setText(verifyText);
 
         auth = FirebaseAuth.getInstance();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(phoneNumber)
+                .setPhoneNumber("+" + phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(OTPActivity.this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -82,7 +82,7 @@ public class OTPActivity extends AppCompatActivity {
                     public void onCodeSent(@NonNull String verifyID, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         super.onCodeSent(verifyID, forceResendingToken);
 
-                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         binding.otpView.requestFocus();
                         dialog.dismiss();
@@ -101,12 +101,12 @@ public class OTPActivity extends AppCompatActivity {
                 auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Intent intent = new Intent(OTPActivity.this, SetupProfileActivity.class);
+                        if(task.isSuccessful()) {
+                            Intent intent = new Intent(OTPActivity.this, CreatePassword.class);
                             startActivity(intent);
                             finishAffinity();
                         } else {
-                            Toast.makeText(OTPActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OTPActivity.this, "Failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
