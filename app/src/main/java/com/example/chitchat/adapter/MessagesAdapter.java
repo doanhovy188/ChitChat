@@ -18,18 +18,17 @@ import com.github.pgreze.reactions.ReactionsConfig;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 import com.example.chitchat.R;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import kotlin.jvm.functions.Function1;
 
 public class MessagesAdapter extends BaseAdapter {
 
     AppCompatActivity appCompatActivity;
     ArrayList<Message> messages;
 
-    String user_loggedIn_ID;
+    String senderID, receiverID;
 
     final int ITEM_SENT = 1;
     final int ITEM_RECEIVE = 2;
@@ -37,10 +36,11 @@ public class MessagesAdapter extends BaseAdapter {
     private int sent_emote = -1;
     private int receive_emote = -1;
 
-    public MessagesAdapter(AppCompatActivity appCompatActivity, ArrayList<Message> messages, String user_loggedIn_ID) {
+    public MessagesAdapter(AppCompatActivity appCompatActivity, ArrayList<Message> messages, String senderID, String receiverID) {
         this.appCompatActivity = appCompatActivity;
         this.messages = messages;
-        this.user_loggedIn_ID = user_loggedIn_ID;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MessagesAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        if (user_loggedIn_ID.equals(message.getSenderId())) {
+        if (senderID.equals(message.getSenderId())) {
             return ITEM_SENT;
         } else {
             return ITEM_RECEIVE;
@@ -74,22 +74,68 @@ public class MessagesAdapter extends BaseAdapter {
             R.drawable.ic_fb_laugh,
             R.drawable.ic_fb_wow,
             R.drawable.ic_fb_sad,
-            R.drawable.ic_fb_angry
+            R.drawable.ic_fb_angry,
+            R.drawable.ic_fb_remove_emote
     };
 
     public void set_emote(int i, View view) {
-        if (getItemViewType(i) == ITEM_RECEIVE && receive_emote >= 0) {
-            ImageView emote = view.findViewById(R.id.receive_emote);
+        Message message = messages.get(i);
+        ImageView emote;
+        if (getItemViewType(i) == ITEM_RECEIVE) {
+            message.setEmote(receive_emote);
+            emote = view.findViewById(R.id.receive_emote);
             emote.setImageResource(reactions[receive_emote]);
             receive_emote = -1;
-            emote.setVisibility(View.VISIBLE);
-        }
-        if (getItemViewType(i) == ITEM_SENT && sent_emote >= 0) {
-            ImageView emote = view.findViewById(R.id.sent_emote);
+        } else {
+            message.setEmote(sent_emote);
+            emote = view.findViewById(R.id.sent_emote);
             emote.setImageResource(reactions[sent_emote]);
             sent_emote = -1;
-            emote.setVisibility(View.VISIBLE);
         }
+
+        FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
+                .child("chatRooms")
+                .child(senderID + receiverID)
+                .child("messages")
+                .child(message.getMessageId()).setValue(message);
+
+        FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
+                .child("chatRooms")
+                .child(receiverID + senderID)
+                .child("messages")
+                .child(message.getMessageId()).setValue(message);
+
+        emote.setVisibility(View.VISIBLE);
+    }
+
+    public void remove_emote(int i, View view) {
+        Message message = messages.get(i);
+        ImageView emote;
+        if (getItemViewType(i) == ITEM_RECEIVE) {
+            message.setEmote(-1);
+            emote = view.findViewById(R.id.receive_emote);
+            emote.setImageResource(reactions[receive_emote]);
+            receive_emote = -1;
+        } else {
+            message.setEmote(-1);
+            emote = view.findViewById(R.id.sent_emote);
+            emote.setImageResource(reactions[sent_emote]);
+            sent_emote = -1;
+        }
+
+        FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
+                .child("chatRooms")
+                .child(senderID + receiverID)
+                .child("messages")
+                .child(message.getMessageId()).setValue(message);
+
+        FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
+                .child("chatRooms")
+                .child(receiverID + senderID)
+                .child("messages")
+                .child(message.getMessageId()).setValue(message);
+
+        emote.setVisibility(View.INVISIBLE);
     }
 
     @SuppressLint("InflateParams")
@@ -98,6 +144,7 @@ public class MessagesAdapter extends BaseAdapter {
         LayoutInflater inflater = appCompatActivity.getLayoutInflater();
         TextView one_message;
         TextView time;
+        ImageView emote;
 
         ReactionsConfig config = new ReactionsConfigBuilder(appCompatActivity)
                 .withReactions(reactions).build();
@@ -118,6 +165,12 @@ public class MessagesAdapter extends BaseAdapter {
 
             time = view.findViewById(R.id.message_receive_time);
             time.setText(String.valueOf(new Date(messages.get(i).getTimesent())));
+
+            if (messages.get(i).getEmote() >= 0) {
+                emote = view.findViewById(R.id.receive_emote);
+                emote.setImageResource(reactions[messages.get(i).getEmote()]);
+                emote.setVisibility(View.VISIBLE);
+            }
         } else {
             view = inflater.inflate(R.layout.item_sent, null);
             one_message = view.findViewById(R.id.sent_message);
@@ -125,6 +178,12 @@ public class MessagesAdapter extends BaseAdapter {
 
             time = view.findViewById(R.id.message_sent_time);
             time.setText(String.valueOf(new Date(messages.get(i).getTimesent())));
+
+            if (messages.get(i).getEmote() >= 0) {
+                emote = view.findViewById(R.id.sent_emote);
+                emote.setImageResource(reactions[messages.get(i).getEmote()]);
+                emote.setVisibility(View.VISIBLE);
+            }
         }
 
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -135,7 +194,11 @@ public class MessagesAdapter extends BaseAdapter {
                 popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        set_emote(i, view);
+                        if (receive_emote == 6 || sent_emote == 6) {
+                            remove_emote(i, view);
+                        }
+                        if (receive_emote >= 0 || sent_emote >= 0)
+                            set_emote(i, view);
                     }
                 });
                 return true;

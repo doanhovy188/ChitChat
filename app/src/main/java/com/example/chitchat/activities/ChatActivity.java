@@ -64,8 +64,7 @@ public class ChatActivity extends AppCompatActivity {
 
         messages = new ArrayList<>();
 
-        String user_loggedIn_ID = getIntent().getStringExtra("senderID");
-        MessagesAdapter messagesAdapter = new MessagesAdapter(this, messages, user_loggedIn_ID);
+        MessagesAdapter messagesAdapter = new MessagesAdapter(this, messages, senderID, receiverID);
         binding.MessageListview.setAdapter(messagesAdapter);
 
         database = FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -77,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                         messages.clear();
                         for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                             Message message = snapshot1.getValue(Message.class);
+                            message.setMessageId(snapshot1.getKey());
                             messages.add(message);
                         }
                         messagesAdapter.notifyDataSetChanged();

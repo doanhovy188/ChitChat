@@ -65,6 +65,8 @@ public class UsersAdapter extends BaseAdapter {
 
         TextView time=view.findViewById(R.id.tiime);
 
+
+
         view.setOnClickListener(view1 -> {
             Intent intent = new Intent(this.appCompatActivity, ChatActivity.class);
             intent.putExtra("name", users.get(i).getName());

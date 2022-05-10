@@ -21,14 +21,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     FirebaseDatabase database;
     ArrayList<User> users;
+    User currentUser;
     UsersAdapter usersAdapter;
     //    TopStatusAdapter statusAdapter;
 //    ArrayList<UserStatus> userStatuses;
@@ -46,12 +50,13 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app");
 
         users = new ArrayList<>();
+
         usersAdapter = new UsersAdapter(this, users, userID);
 
         binding.UsersListview.setAdapter(usersAdapter);
 
         database.getReference().child("users").addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+            @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();
@@ -60,8 +65,13 @@ public class MainActivity extends AppCompatActivity {
 //                    System.out.println(FirebaseAuth.getInstance().getUid());
                     if (!user.getUserID().equals(userID))
                         users.add(user);
+                    else currentUser = user;
                 }
                 usersAdapter.notifyDataSetChanged();
+
+                Picasso.get().load(currentUser.getAvatar()).into(binding.currentUserAvatar);
+
+                binding.Welcome.setText("Welcome back\n" + currentUser.getName());
             }
 
             @Override
