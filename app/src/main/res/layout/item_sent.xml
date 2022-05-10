@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/sent_emote"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:visibility="invisible"

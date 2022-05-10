@@ -65,5 +65,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-messaging'
 
+    // emote
+    implementation "com.github.pgreze:android-reactions:1.3"
+
 }
 

@@ -16,12 +16,11 @@
         android:text="TextView"
         android:textColor="#040404"
         android:textSize="16sp"
-        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/receive_emote"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:visibility="invisible"
