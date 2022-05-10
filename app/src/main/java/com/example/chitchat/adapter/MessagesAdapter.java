@@ -77,6 +77,21 @@ public class MessagesAdapter extends BaseAdapter {
             R.drawable.ic_fb_angry
     };
 
+    public void set_emote(int i, View view) {
+        if (getItemViewType(i) == ITEM_RECEIVE && receive_emote >= 0) {
+            ImageView emote = view.findViewById(R.id.receive_emote);
+            emote.setImageResource(reactions[receive_emote]);
+            receive_emote = -1;
+            emote.setVisibility(View.VISIBLE);
+        }
+        if (getItemViewType(i) == ITEM_SENT && sent_emote >= 0) {
+            ImageView emote = view.findViewById(R.id.sent_emote);
+            emote.setImageResource(reactions[sent_emote]);
+            sent_emote = -1;
+            emote.setVisibility(View.VISIBLE);
+        }
+    }
+
     @SuppressLint("InflateParams")
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
@@ -117,18 +132,12 @@ public class MessagesAdapter extends BaseAdapter {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 popup.onTouch(view, motionEvent);
-                if (getItemViewType(i) == ITEM_RECEIVE && receive_emote >= 0) {
-                    ImageView emote = view.findViewById(R.id.receive_emote);
-                    emote.setImageResource(reactions[receive_emote]);
-                    receive_emote = -1;
-                    emote.setVisibility(View.VISIBLE);
-                }
-                if (getItemViewType(i) == ITEM_SENT && sent_emote >= 0) {
-                    ImageView emote = view.findViewById(R.id.sent_emote);
-                    emote.setImageResource(reactions[sent_emote]);
-                    sent_emote = -1;
-                    emote.setVisibility(View.VISIBLE);
-                }
+                popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        set_emote(i, view);
+                    }
+                });
                 return true;
             }
         });
