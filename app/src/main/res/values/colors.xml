@@ -11,4 +11,5 @@
     <color name="greenDark">#28852C</color>
     <color name="mainText">#434343</color>
     <color name="grey">#EAEAEA</color>
+    <color name="iconLogin">#696969</color>
 </resources>

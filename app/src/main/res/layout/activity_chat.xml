@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/green"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -95,6 +95,7 @@
                 android:background="@android:color/transparent"
                 android:hint="Type a message..."
                 android:inputType="textPersonName"
+                android:minHeight="48dp"
                 android:padding="8dp"
                 android:textSize="14sp" />
 
@@ -126,6 +127,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:divider="#00000000"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <ImageView
