@@ -2,6 +2,7 @@ package com.example.chitchat.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -53,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         usersAdapter = new UsersAdapter(this, users, userID);
 
-        binding.UsersListview.setAdapter(usersAdapter);
+        binding.UsersRecycleView.setAdapter(usersAdapter);
+
+        binding.UsersRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
         database.getReference().child("users").addValueEventListener(new ValueEventListener() {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     @Override

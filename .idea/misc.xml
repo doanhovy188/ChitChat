@@ -37,10 +37,12 @@
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/row_conversation.xml" value="0.5" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/drawable/radius_background.xml" value="0.257" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/drawable/textbox_border.xml" value="0.3635" />
-        <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_chat.xml" value="0.15220179563916203" />
+        <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_otpactivity.xml" value="0.5" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_setup_profile.xml" value="0.24524025385312784" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/activity_verify.xml" value="0.5" />
+        <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/layout/row_conversation.xml" value="0.2860196665241556" />
       </map>
     </option>
   </component>

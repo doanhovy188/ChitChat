@@ -37,8 +37,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/menu" />
 
-    <ListView
-        android:id="@+id/UsersListview"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/UsersRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
@@ -104,6 +105,13 @@ public class ChatActivity extends AppCompatActivity {
                                 .addOnSuccessListener(unused1 -> {
 
                                 });
+                        HashMap<String, Object> lastMsgObj = new HashMap<>();
+                        lastMsgObj.put("lastMsg", message.getMessage());
+                        lastMsgObj.put("lastMsgTime",date.getTime());
+                        lastMsgObj.put("senderId", message.getSenderId());
+
+                        database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj);
+                        database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
                     });
             binding.messageBox.setText("");
         });
