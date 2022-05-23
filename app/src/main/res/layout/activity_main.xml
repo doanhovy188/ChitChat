@@ -6,28 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/createStoryBtn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_circle"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="+"
+            android:textColor="@color/green"
+            android:textSize="26sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/StoriesRecycleView"
+            android:layout_width="273dp"
+            android:layout_height="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/createStoryBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <View
         android:id="@+id/view6"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
         android:background="#E4E4E4"
-        app:layout_constraintTop_toBottomOf="@+id/currentUserAvatar"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/currentUserAvatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="@string/a_verify_picture"
-        android:src="@drawable/avatar"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025"
-        tools:ignore="ImageContrastCheck" />
+        app:layout_constraintTop_toBottomOf="@id/ConstraintLayout2" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -41,21 +59,11 @@
         android:id="@+id/UsersRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view6" />
+        app:layout_constraintTop_toBottomOf="@+id/view6">
 
-    <TextView
-        android:id="@+id/Welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
-        android:text="Welcome "
-        android:textSize="26dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

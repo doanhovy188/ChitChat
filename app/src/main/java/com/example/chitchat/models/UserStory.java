@@ -14,6 +14,10 @@ public class UserStory {
         this.stories = stories;
     }
 
+    public UserStory(){
+
+    }
+
     public String getName() {
         return name;
     }
