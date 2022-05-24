@@ -1,5 +1,8 @@
 package com.example.chitchat.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Message {
     private String messageId, message, senderId, senderAvatarUrl;
     private long timesent;
@@ -67,5 +70,11 @@ public class Message {
 
     public void setSenderAvatarUrl(String senderAvatarUrl) {
         this.senderAvatarUrl = senderAvatarUrl;
+    }
+
+    public String getTimeSentFormatted (SimpleDateFormat formater){
+        Date date = new Date(timesent);
+        String strDate = formater.format(date);
+        return strDate;
     }
 }

@@ -1,10 +1,12 @@
 package com.example.chitchat.adapter;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -20,6 +22,7 @@ import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import com.example.chitchat.R;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -158,14 +161,32 @@ public class MessagesAdapter extends BaseAdapter {
             return true; // true is closing popup, false is requesting a new selection
         });
 
+        String strFormatMsg = "HH:mm dd/mm/yyyy";
+        String strFormatToCompare = "dd/mm/yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(strFormatToCompare);
+        String dateMsg = formatter.format(new Date(messages.get(i).getTimesent()));
+        String today = formatter.format(new Date().getTime());
+
+        if (dateMsg.equals(today)) strFormatMsg = "HH:mm";
+
+        formatter = new SimpleDateFormat(strFormatMsg);
+
         if (getItemViewType(i) == ITEM_RECEIVE) {
             view = inflater.inflate(R.layout.item_receive, null);
             one_message = view.findViewById(R.id.receive_message);
             one_message.setText(messages.get(i).getMessage());
-
-            time = view.findViewById(R.id.message_receive_time);
-            time.setText(String.valueOf(new Date(messages.get(i).getTimesent())));
-
+            long dif;
+            if (i>0)
+                dif = messages.get(i).getTimesent() - messages.get(i-1).getTimesent();
+            else dif = 300001;
+            if (dif > 300000){
+                time = view.findViewById(R.id.message_receive_time);
+                time.setText(messages.get(i).getTimeSentFormatted(formatter));
+            } else {
+                ViewGroup parent = (ViewGroup) view;
+                time = view.findViewById(R.id.message_receive_time);
+                parent.removeView(time);
+            }
             if (messages.get(i).getEmote() >= 0) {
                 emote = view.findViewById(R.id.receive_emote);
                 emote.setImageResource(reactions[messages.get(i).getEmote()]);
@@ -175,9 +196,18 @@ public class MessagesAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.item_sent, null);
             one_message = view.findViewById(R.id.sent_message);
             one_message.setText(messages.get(i).getMessage());
-
-            time = view.findViewById(R.id.message_sent_time);
-            time.setText(String.valueOf(new Date(messages.get(i).getTimesent())));
+            long dif;
+            if (i>0)
+                dif = messages.get(i).getTimesent() - messages.get(i-1).getTimesent();
+            else dif = 300001;
+            if (dif > 300000){
+                time = view.findViewById(R.id.message_sent_time);
+                time.setText(messages.get(i).getTimeSentFormatted(formatter));
+            }else {
+                ViewGroup parent = (ViewGroup) view;
+                time = view.findViewById(R.id.message_sent_time);
+                parent.removeView(time);
+            }
 
             if (messages.get(i).getEmote() >= 0) {
                 emote = view.findViewById(R.id.sent_emote);
@@ -186,25 +216,49 @@ public class MessagesAdapter extends BaseAdapter {
             }
         }
 
-        view.setOnTouchListener(new View.OnTouchListener() {
+        int id = getItemViewType(i) == ITEM_RECEIVE? R.id.receive_message : R.id.sent_message;
+
+        view.findViewById(id).setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                popup.onTouch(view, motionEvent);
+            public boolean onTouch(View v, MotionEvent event) {
+                popup.onTouch(v, event);
                 popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         if (receive_emote == 6 || sent_emote == 6) {
-                            remove_emote(i, view);
+                            remove_emote(i, (View)v.getParent());
+
                         }
                         if (receive_emote >= 0 || sent_emote >= 0)
-                            set_emote(i, view);
+                            set_emote(i, (View)v.getParent());
                     }
                 });
-                return true;
-            }
+                return true;                }
         });
+
+
+//        view.setOnTouchListener(new View.OnTouchListener() {
+//            @SuppressLint("ClickableViewAccessibility")
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                popup.onTouch(view, motionEvent);
+//                popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss() {
+//                        if (receive_emote == 6 || sent_emote == 6) {
+//                            remove_emote(i, view);
+//                        }
+//                        if (receive_emote >= 0 || sent_emote >= 0)
+//                            set_emote(i, view);
+//                    }
+//                });
+//                return true;
+//            }
+//        });
 
         return view;
     }
+
+
 }

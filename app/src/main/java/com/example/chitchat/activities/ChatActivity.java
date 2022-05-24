@@ -3,6 +3,7 @@ package com.example.chitchat.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.chitchat.R;
 import com.example.chitchat.adapter.MessagesAdapter;
 import com.example.chitchat.databinding.ActivityChatBinding;
 import com.example.chitchat.models.Message;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -74,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int countOldMsg = messages.size();
                         messages.clear();
                         for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                             Message message = snapshot1.getValue(Message.class);
@@ -81,6 +84,8 @@ public class ChatActivity extends AppCompatActivity {
                             messages.add(message);
                         }
                         messagesAdapter.notifyDataSetChanged();
+                        if (messages.size() > countOldMsg)
+                            scrollMyListViewToBottom();
                     }
 
                     @Override
@@ -114,6 +119,17 @@ public class ChatActivity extends AppCompatActivity {
                         database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
                     });
             binding.messageBox.setText("");
+        });
+    }
+
+    private void scrollMyListViewToBottom() {
+        ListView listView = findViewById(R.id.MessageListview);
+        listView.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                listView.setSelection(messages.size() - 1);
+            }
         });
     }
 }

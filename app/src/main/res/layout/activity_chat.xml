@@ -120,8 +120,7 @@
 
     <ListView
         android:id="@+id/MessageListview"
-        android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"
+
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#FFFFFF"
@@ -146,3 +145,6 @@
         app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    android:transcriptMode="alwaysScroll"-->
+<!--    android:stackFromBottom="true"-->
