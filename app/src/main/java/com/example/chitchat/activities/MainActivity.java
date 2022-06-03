@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                stories.clear();
                 if (snapshot.exists()) {
                     for (DataSnapshot storySnapshot : snapshot.getChildren()) {
                         UserStory userStories = new UserStory();
@@ -219,11 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Login.class);
                 startActivity(intent);
                 finish();
-//                Toast.makeText(this, "group clicked.", Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(MainActivity.this, GroupChatActivity.class));
-                break;
-            case R.id.search:
-                Toast.makeText(this, "Search clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
