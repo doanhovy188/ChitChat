@@ -147,15 +147,12 @@ public class ChatActivity extends AppCompatActivity {
                     .addOnSuccessListener(unused -> {
                         database.getReference().child("chatRooms").child(receiverRoom).child("messages").child(randomKey).setValue(message)
                                 .addOnSuccessListener(unused1 -> {
-
+                                    database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj)
+                                            .addOnSuccessListener(unused2 -> {
+                                                System.out.println("unused2");
+                                                database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
+                                            });
                                 });
-                        HashMap<String, Object> lastMsgObj = new HashMap<>();
-                        lastMsgObj.put("lastMsg", message.getMessage());
-                        lastMsgObj.put("lastMsgTime",date.getTime());
-                        lastMsgObj.put("senderId", message.getSenderId());
-
-                        database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj);
-                        database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
                     });
             binding.messageBox.setText("");
         });

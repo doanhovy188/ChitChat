@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -50,6 +52,11 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "Phone Number not found!!!", Toast.LENGTH_SHORT).show();
                     } else {
                         if (password.equals(user.getPassword())) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("Login_data", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor prefEditor = sharedPreferences.edit();
+                            prefEditor.putString("phone", phone);
+                            prefEditor.putString("password", password);
+                            prefEditor.apply();
                             Intent intent = new Intent(Login.this, MainActivity.class);
                             intent.putExtra("userID", user.getUserID());
                             startActivity(intent);

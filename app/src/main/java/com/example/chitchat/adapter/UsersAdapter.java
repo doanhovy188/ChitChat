@@ -70,10 +70,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
+                        System.out.println(snapshot);
+                        if (snapshot.exists() && snapshot.child("lastMsg").getValue(String.class) != null) {
                             String lastMsg = snapshot.child("lastMsg").getValue(String.class);
                             String senderID = snapshot.child("senderId").getValue(String.class);
-                            if(senderID.equals(currentUserId)) lastMsg = "you: " + lastMsg;
+                            if (senderID.equals(currentUserId)) lastMsg = "you: " + lastMsg;
                             long time = snapshot.child("lastMsgTime").getValue(Long.class);
                             SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
                             holder.binding.tiime.setText(dateFormat.format(new Date(time)));

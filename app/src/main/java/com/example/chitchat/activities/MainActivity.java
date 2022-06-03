@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -118,14 +120,14 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    for (DataSnapshot storySnapshot : snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot storySnapshot : snapshot.getChildren()) {
                         UserStory userStories = new UserStory();
                         userStories.setName(storySnapshot.child("name").getValue(String.class));
                         userStories.setAvatar(storySnapshot.child("avatar").getValue(String.class));
                         userStories.setLastUpdated(storySnapshot.child("lastUpdate").getValue(long.class));
                         ArrayList<Story> storiesTemp = new ArrayList<>();
-                        for (DataSnapshot story : storySnapshot.child("stories").getChildren()){
+                        for (DataSnapshot story : storySnapshot.child("stories").getChildren()) {
                             Story st = story.getValue(Story.class);
                             storiesTemp.add(st);
                         }
@@ -158,16 +160,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data != null){
-            if (data.getData() != null){
+        if (data != null) {
+            if (data.getData() != null) {
                 dialog.show();
                 FirebaseStorage storage = FirebaseStorage.getInstance("gs://chitchat-3f357.appspot.com");
                 Date date = new Date();
-                StorageReference reference = storage.getReference().child("story").child(date.getTime()+"");
+                StorageReference reference = storage.getReference().child("story").child(date.getTime() + "");
                 reference.putFile(data.getData()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -179,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                     HashMap<String, Object> obj = new HashMap<>();
                                     obj.put("name", userStory.getName());
                                     obj.put("avatar", userStory.getAvatar());
-                                    obj.put("lastUpdate",userStory.getLastUpdated());
+                                    obj.put("lastUpdate", userStory.getLastUpdated());
 
                                     String imgUrl = uri.toString();
                                     Story story = new Story(imgUrl, userStory.getLastUpdated());
@@ -207,15 +209,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.group:
-                Toast.makeText(this, "group clicked.", Toast.LENGTH_SHORT).show();
+            case R.id.logout:
+                SharedPreferences sharedPreferences = getSharedPreferences("Login_data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor prefEditor = sharedPreferences.edit();
+                prefEditor.remove("phone");
+                prefEditor.remove("password");
+                prefEditor.remove("Login_data");
+                prefEditor.apply();
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
+                finish();
+//                Toast.makeText(this, "group clicked.", Toast.LENGTH_SHORT).show();
 //                startActivity(new Intent(MainActivity.this, GroupChatActivity.class));
                 break;
             case R.id.search:
                 Toast.makeText(this, "Search clicked.", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.settings:
-                Toast.makeText(this, "Settings Clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
