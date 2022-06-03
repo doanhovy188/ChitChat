@@ -104,19 +104,21 @@ public class ChatActivity extends AppCompatActivity {
             Date date = new Date();
             Message message = new Message(One_message, senderID, date.getTime());
 
+            HashMap<String, Object> lastMsgObj = new HashMap<>();
+            lastMsgObj.put("lastMsg", message.getMessage());
+            lastMsgObj.put("lastMsgTime", date.getTime());
+            lastMsgObj.put("senderId", message.getSenderId());
+
             database.getReference().child("chatRooms").child(senderRoom).child("messages").push().setValue(message)
                     .addOnSuccessListener(unused -> {
                         database.getReference().child("chatRooms").child(receiverRoom).child("messages").push().setValue(message)
                                 .addOnSuccessListener(unused1 -> {
-
+                                    database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj)
+                                            .addOnSuccessListener(unused2 -> {
+                                                System.out.println("unused2");
+                                                database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
+                                            });
                                 });
-                        HashMap<String, Object> lastMsgObj = new HashMap<>();
-                        lastMsgObj.put("lastMsg", message.getMessage());
-                        lastMsgObj.put("lastMsgTime",date.getTime());
-                        lastMsgObj.put("senderId", message.getSenderId());
-
-                        database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj);
-                        database.getReference().child("chatRooms").child(receiverRoom).updateChildren(lastMsgObj);
                     });
             binding.messageBox.setText("");
         });

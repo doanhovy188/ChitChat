@@ -111,7 +111,7 @@ public class SetupProfileActivity extends AppCompatActivity {
                 } else {
                     String uid = auth.getUid();
                     String avatarUrl = "https://firebasestorage.googleapis.com/v0/b/chitchat-3f357.appspot.com/o/Profiles%2Favatar.png?alt=media&token=59085f17-ff6e-4bdb-ace7-13cce345a5fd";
-                    User user = new User(uid, name, Login.PHONENUMBER, Login.PHONENUMBER, avatarUrl);
+                    User user = new User(uid, name, Login.PHONENUMBER, Login.PASSWORD, avatarUrl);
                     Log.e("log", user.toString());
                     database.getReference()
                             .child("users")
