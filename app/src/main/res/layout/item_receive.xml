@@ -7,37 +7,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/receive_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="80dp"
-        android:background="@drawable/receive_drawable"
-        android:paddingStart="15dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="10dp"
-        android:text="TextView"
-        android:textColor="#040404"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_receive_time"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/message_receive_time">
 
-    <ImageView
-        android:id="@+id/receive_emote"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/receive_message"
-        app:layout_constraintEnd_toEndOf="@+id/receive_message"
-        app:layout_constraintStart_toEndOf="@+id/receive_message"
-        app:layout_constraintTop_toTopOf="@+id/receive_message"
-        app:srcCompat="@drawable/ic_fb_laugh" />
+        <TextView
+            android:id="@+id/receive_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/receive_drawable"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="10dp"
+            android:text="TextView"
+            android:textColor="#040404"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/receive_emote"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/receive_message"
+            app:layout_constraintEnd_toEndOf="@+id/receive_message"
+            app:layout_constraintTop_toBottomOf="@+id/receive_message"
+            app:srcCompat="@drawable/ic_fb_laugh" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/message_receive_time"

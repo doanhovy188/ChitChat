@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -21,6 +20,7 @@ import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 import com.example.chitchat.R;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ public class MessagesAdapter extends BaseAdapter {
 
     final int ITEM_SENT = 1;
     final int ITEM_RECEIVE = 2;
+    final int ITEM_PHOTO_SENT = 3;
+    final int ITEM_PHOTO_RECEIVE = 4;
 
     private int sent_emote = -1;
     private int receive_emote = -1;
@@ -65,9 +67,15 @@ public class MessagesAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         Message message = messages.get(position);
         if (senderID.equals(message.getSenderId())) {
-            return ITEM_SENT;
+            if (message.getPhotoUrl() != null)
+                return ITEM_PHOTO_SENT;
+            else
+                return ITEM_SENT;
         } else {
-            return ITEM_RECEIVE;
+            if (message.getPhotoUrl() != null)
+                return ITEM_PHOTO_RECEIVE;
+            else
+                return ITEM_RECEIVE;
         }
     }
 
@@ -84,16 +92,28 @@ public class MessagesAdapter extends BaseAdapter {
     public void set_emote(int i, View view) {
         Message message = messages.get(i);
         ImageView emote;
-        if (getItemViewType(i) == ITEM_RECEIVE) {
+        int itemViewType = getItemViewType(i);
+
+        if (itemViewType == ITEM_RECEIVE) {
             message.setEmote(receive_emote);
             emote = view.findViewById(R.id.receive_emote);
             emote.setImageResource(reactions[receive_emote]);
             receive_emote = -1;
-        } else {
+        } else if (itemViewType == ITEM_SENT){
             message.setEmote(sent_emote);
             emote = view.findViewById(R.id.sent_emote);
             emote.setImageResource(reactions[sent_emote]);
             sent_emote = -1;
+        } else if (itemViewType == ITEM_PHOTO_SENT){
+            message.setEmote(sent_emote);
+            emote = view.findViewById(R.id.photo_sent_emote);
+            emote.setImageResource(reactions[sent_emote]);
+            sent_emote = -1;
+        } else {
+            message.setEmote(receive_emote);
+            emote = view.findViewById(R.id.photo_receive_emote);
+            emote.setImageResource(reactions[receive_emote]);
+            receive_emote = -1;
         }
 
         FirebaseDatabase.getInstance("https://chitchat-3f357-default-rtdb.asia-southeast1.firebasedatabase.app").getReference()
@@ -114,14 +134,25 @@ public class MessagesAdapter extends BaseAdapter {
     public void remove_emote(int i, View view) {
         Message message = messages.get(i);
         ImageView emote;
-        if (getItemViewType(i) == ITEM_RECEIVE) {
+        int itemViewType = getItemViewType(i);
+        if (itemViewType == ITEM_RECEIVE) {
             message.setEmote(-1);
             emote = view.findViewById(R.id.receive_emote);
             emote.setImageResource(reactions[receive_emote]);
             receive_emote = -1;
-        } else {
+        } else if (itemViewType == ITEM_SENT) {
             message.setEmote(-1);
             emote = view.findViewById(R.id.sent_emote);
+            emote.setImageResource(reactions[sent_emote]);
+            sent_emote = -1;
+        } else if (itemViewType == ITEM_PHOTO_RECEIVE){
+            message.setEmote(-1);
+            emote = view.findViewById(R.id.photo_receive_emote);
+            emote.setImageResource(reactions[receive_emote]);
+            receive_emote = -1;
+        } else {
+            message.setEmote(-1);
+            emote = view.findViewById(R.id.photo_sent_emote);
             emote.setImageResource(reactions[sent_emote]);
             sent_emote = -1;
         }
@@ -153,7 +184,7 @@ public class MessagesAdapter extends BaseAdapter {
                 .withReactions(reactions).build();
 
         ReactionPopup popup = new ReactionPopup(appCompatActivity, config, (position) -> {
-            if (getItemViewType(i) == ITEM_RECEIVE) {
+            if (getItemViewType(i) == ITEM_RECEIVE || getItemViewType(i) == ITEM_PHOTO_RECEIVE) {
                 receive_emote = position;
             } else {
                 sent_emote = position;
@@ -161,11 +192,12 @@ public class MessagesAdapter extends BaseAdapter {
             return true; // true is closing popup, false is requesting a new selection
         });
 
-        String strFormatMsg = "HH:mm dd/mm/yyyy";
-        String strFormatToCompare = "dd/mm/yyyy";
+        String strFormatMsg = "HH:mm dd/MM/yyyy";
+        String strFormatToCompare = "dd/MM/yyyy";
         SimpleDateFormat formatter = new SimpleDateFormat(strFormatToCompare);
         String dateMsg = formatter.format(new Date(messages.get(i).getTimesent()));
         String today = formatter.format(new Date().getTime());
+
 
         if (dateMsg.equals(today)) strFormatMsg = "HH:mm";
 
@@ -192,8 +224,9 @@ public class MessagesAdapter extends BaseAdapter {
                 emote.setImageResource(reactions[messages.get(i).getEmote()]);
                 emote.setVisibility(View.VISIBLE);
             }
-        } else {
+        } else if (getItemViewType(i) == ITEM_SENT) {
             view = inflater.inflate(R.layout.item_sent, null);
+            TextView editText = view.findViewById(R.id.sent_message);
             one_message = view.findViewById(R.id.sent_message);
             one_message.setText(messages.get(i).getMessage());
             long dif;
@@ -215,8 +248,65 @@ public class MessagesAdapter extends BaseAdapter {
                 emote.setVisibility(View.VISIBLE);
             }
         }
+        else if (getItemViewType(i) == ITEM_PHOTO_RECEIVE){
+            view = inflater.inflate(R.layout.item_photo_receive, null);
+            long dif;
+            if (i>0)
+                dif = messages.get(i).getTimesent() - messages.get(i-1).getTimesent();
+            else dif = 300001;
+            if (dif > 300000){
+                time = view.findViewById(R.id.photo_receive_time);
+                time.setText(messages.get(i).getTimeSentFormatted(formatter));
+            }else {
+                ViewGroup parent = (ViewGroup) view;
+                time = view.findViewById(R.id.photo_receive_time);
+                parent.removeView(time);
+            }
 
-        int id = getItemViewType(i) == ITEM_RECEIVE? R.id.receive_message : R.id.sent_message;
+            if (messages.get(i).getEmote() >= 0) {
+                emote = view.findViewById(R.id.photo_receive_emote);
+                emote.setImageResource(reactions[messages.get(i).getEmote()]);
+                emote.setVisibility(View.VISIBLE);
+            }
+            Picasso.get().load(messages.get(i).getPhotoUrl()).into((ImageView) view.findViewById(R.id.photo_receive));
+        } else {
+            view = inflater.inflate(R.layout.item_photo_sent, null);
+            long dif;
+            if (i>0)
+                dif = messages.get(i).getTimesent() - messages.get(i-1).getTimesent();
+            else dif = 300001;
+            if (dif > 300000){
+                time = view.findViewById(R.id.photo_sent_time);
+                time.setText(messages.get(i).getTimeSentFormatted(formatter));
+            }else {
+                ViewGroup parent = (ViewGroup) view;
+                time = view.findViewById(R.id.photo_sent_time);
+                parent.removeView(time);
+            }
+
+            if (messages.get(i).getEmote() >= 0) {
+                emote = view.findViewById(R.id.photo_sent_emote);
+                emote.setImageResource(reactions[messages.get(i).getEmote()]);
+                emote.setVisibility(View.VISIBLE);
+            }
+            Picasso.get().load(messages.get(i).getPhotoUrl()).into((ImageView) view.findViewById(R.id.photo_sent));
+        }
+
+        int id;
+        switch (getItemViewType(i)){
+            case ITEM_RECEIVE:
+                id = R.id.receive_message;
+                break;
+            case ITEM_PHOTO_RECEIVE:
+                id = R.id.photo_receive;
+                break;
+            case ITEM_PHOTO_SENT:
+                id = R.id.photo_sent;
+                break;
+            default:
+                id = R.id.sent_message;
+                break;
+        }
 
         view.findViewById(id).setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -227,36 +317,15 @@ public class MessagesAdapter extends BaseAdapter {
                     @Override
                     public void onDismiss() {
                         if (receive_emote == 6 || sent_emote == 6) {
-                            remove_emote(i, (View)v.getParent());
+                            remove_emote(i, (View)v.getParent().getParent());
 
                         }
                         if (receive_emote >= 0 || sent_emote >= 0)
-                            set_emote(i, (View)v.getParent());
+                            set_emote(i, (View)v.getParent().getParent());
                     }
                 });
                 return true;                }
         });
-
-
-//        view.setOnTouchListener(new View.OnTouchListener() {
-//            @SuppressLint("ClickableViewAccessibility")
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                popup.onTouch(view, motionEvent);
-//                popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss() {
-//                        if (receive_emote == 6 || sent_emote == 6) {
-//                            remove_emote(i, view);
-//                        }
-//                        if (receive_emote >= 0 || sent_emote >= 0)
-//                            set_emote(i, view);
-//                    }
-//                });
-//                return true;
-//            }
-//        });
-
         return view;
     }
 

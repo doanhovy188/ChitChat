@@ -24,17 +24,20 @@
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable-v24/sent_drawable.xml" value="0.1" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.165" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable/ic_baseline_phone_android_24.xml" value="0.165" />
+        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable/photo_border.xml" value="0.1" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable/receive_drawable.xml" value="0.1" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/drawable/stroke_circle.xml" value="0.149" />
-        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_chat.xml" value="0.2" />
+        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_chat.xml" value="0.67" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_create_password.xml" value="0.22" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_login.xml" value="0.5" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_main.xml" value="0.4633471645919779" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_otpactivity.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_setup_profile.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/activity_verify.xml" value="0.22" />
+        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_photo_receive.xml" value="0.5" />
+        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_photo_sent.xml" value="0.3415492957746479" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_receive.xml" value="0.75" />
-        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_sent.xml" value="0.75" />
+        <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_sent.xml" value="0.45754716981132076" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/item_story.xml" value="0.5" />
         <entry key="..\:/Users/Ho Vy/Desktop/ChitChat/app/src/main/res/layout/row_conversation.xml" value="0.5" />
         <entry key="..\:/Users/doanh/AndroidStudioProjects/ChitChat/app/src/main/res/drawable/radius_background.xml" value="0.257" />

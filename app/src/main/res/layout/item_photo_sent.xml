@@ -14,36 +14,45 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_sent_time">
+        app:layout_constraintTop_toBottomOf="@+id/photo_sent_time">
 
-        <TextView
-            android:id="@+id/sent_message"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/sent_drawable"
-            android:paddingStart="15dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="15dp"
-            android:paddingBottom="10dp"
-            android:text="TextView"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:backgroundTint="#87E88A"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/photo_sent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+
 
         <ImageView
-            android:id="@+id/sent_emote"
+            android:id="@+id/photo_sent_emote"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/sent_message"
-            app:layout_constraintEnd_toEndOf="@+id/sent_message"
-            app:layout_constraintTop_toBottomOf="@+id/sent_message"
+            android:translationZ="90dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+            app:layout_constraintEnd_toEndOf="@+id/cardView2"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2"
             app:srcCompat="@drawable/ic_fb_laugh" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/message_sent_time"
+        android:id="@+id/photo_sent_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"

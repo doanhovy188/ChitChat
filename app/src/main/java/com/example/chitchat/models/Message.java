@@ -1,10 +1,12 @@
 package com.example.chitchat.models;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
-    private String messageId, message, senderId, senderAvatarUrl;
+    private String messageId, message, senderId, senderAvatarUrl, photoUrl;
     private long timesent;
     private int emote = -1;
 
@@ -17,11 +19,23 @@ public class Message {
         this.timesent = timesent;
     }
 
-    public Message(String messageId, String senderId, long timesent, int emote) {
-        this.messageId = messageId;
+    public Message(String messageId, String message, String senderId, long timesent) {
+        this.message = message;
         this.senderId = senderId;
         this.timesent = timesent;
-        this.emote = emote;
+    }
+
+    public Message(String message, String senderId, long timesent, String photoUrl) {
+        this.message = message;
+        this.senderId = senderId;
+        this.timesent = timesent;
+        this.photoUrl = photoUrl;
+    }
+    public Message(String messageId, String message, String senderId, long timesent, String photoUrl) {
+        this.message = message;
+        this.senderId = senderId;
+        this.timesent = timesent;
+        this.photoUrl = photoUrl;
     }
 
     public String getMessageId() {
@@ -76,5 +90,13 @@ public class Message {
         Date date = new Date(timesent);
         String strDate = formater.format(date);
         return strDate;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
