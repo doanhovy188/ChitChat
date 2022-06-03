@@ -147,6 +147,10 @@ public class ChatActivity extends AppCompatActivity {
                     .addOnSuccessListener(unused -> {
                         database.getReference().child("chatRooms").child(receiverRoom).child("messages").child(randomKey).setValue(message)
                                 .addOnSuccessListener(unused1 -> {
+                                    HashMap<String, Object> lastMsgObj = new HashMap<>();
+                                    lastMsgObj.put("lastMsg", message.getMessage());
+                                    lastMsgObj.put("lastMsgTime",message.getTimesent());
+                                    lastMsgObj.put("senderId", message.getSenderId());
                                     database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj)
                                             .addOnSuccessListener(unused2 -> {
                                                 System.out.println("unused2");
