@@ -108,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (messages.size() > countOldMsg)
                             scrollMyListViewToBottom();
                         Date date = new Date();
-                        if (!messages.get(messages.size() - 1).getSenderId().equals(senderID) && messages.get(messages.size() - 1).getTimesent() - date.getTime() < 10000) {
+                        if (messages.get(messages.size() - 1).getSenderId() != null && !messages.get(messages.size() - 1).getSenderId().equals(senderID) && messages.get(messages.size() - 1).getTimesent() - date.getTime() < 10000) {
                             notification.ShowNotification(userName, messages.get(messages.size() - 1).getMessage());
                         }
                     }
