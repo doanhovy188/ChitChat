@@ -20,11 +20,12 @@ import com.google.firebase.database.ValueEventListener;
 public class OnStart extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_start);
+
+        notification.appCompatActivity = this;
 
         SharedPreferences sharedPreferences = getSharedPreferences("Login_data", Context.MODE_PRIVATE);
 

@@ -2,6 +2,7 @@ package com.example.chitchat.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chitchat.R;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -76,8 +78,6 @@ public class ChatActivity extends AppCompatActivity {
 
         senderID = getIntent().getStringExtra("senderID");
 
-
-
         senderRoom = senderID + receiverID;
         receiverRoom = receiverID + senderID;
 
@@ -94,6 +94,7 @@ public class ChatActivity extends AppCompatActivity {
 
         database.getReference().child("chatRooms").child(senderRoom).child("messages")
                 .addValueEventListener(new ValueEventListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         int countOldMsg = messages.size();
@@ -106,6 +107,10 @@ public class ChatActivity extends AppCompatActivity {
                         messagesAdapter.notifyDataSetChanged();
                         if (messages.size() > countOldMsg)
                             scrollMyListViewToBottom();
+                        Date date = new Date();
+                        if (!messages.get(messages.size() - 1).getSenderId().equals(senderID) && messages.get(messages.size() - 1).getTimesent() - date.getTime() < 10000) {
+                            notification.ShowNotification(userName, messages.get(messages.size() - 1).getMessage());
+                        }
                     }
 
                     @Override
@@ -129,7 +134,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-
         binding.sendBtn.setOnClickListener(view1 -> {
             String One_message = binding.messageBox.getText().toString();
 
@@ -137,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(One_message, senderID, date.getTime());
             HashMap<String, Object> tempLastMsgObj = new HashMap<>();
             tempLastMsgObj.put("lastMsg", "");
-            tempLastMsgObj.put("lastMsgTime",0);
+            tempLastMsgObj.put("lastMsgTime", 0);
             tempLastMsgObj.put("senderId", "");
 
             database.getReference().child("chatRooms").child(senderRoom).updateChildren(tempLastMsgObj);
@@ -149,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .addOnSuccessListener(unused1 -> {
                                     HashMap<String, Object> lastMsgObj = new HashMap<>();
                                     lastMsgObj.put("lastMsg", message.getMessage());
-                                    lastMsgObj.put("lastMsgTime",message.getTimesent());
+                                    lastMsgObj.put("lastMsgTime", message.getTimesent());
                                     lastMsgObj.put("senderId", message.getSenderId());
                                     database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj)
                                             .addOnSuccessListener(unused2 -> {
@@ -166,9 +170,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 25){
-            if (data != null){
-                if (data.getData() != null){
+        if (requestCode == 25) {
+            if (data != null) {
+                if (data.getData() != null) {
                     dialog.show();
                     Uri selectedImage = data.getData();
                     Calendar calendar = Calendar.getInstance();
@@ -177,7 +181,7 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             dialog.dismiss();
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
@@ -186,7 +190,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Message message = new Message("Image", senderID, date.getTime(), filePath);
                                         HashMap<String, Object> tempLastMsgObj = new HashMap<>();
                                         tempLastMsgObj.put("lastMsg", "");
-                                        tempLastMsgObj.put("lastMsgTime",0);
+                                        tempLastMsgObj.put("lastMsgTime", 0);
                                         tempLastMsgObj.put("senderId", "");
 
                                         database.getReference().child("chatRooms").child(senderRoom).updateChildren(tempLastMsgObj);
@@ -199,7 +203,7 @@ public class ChatActivity extends AppCompatActivity {
                                                             });
                                                     HashMap<String, Object> lastMsgObj = new HashMap<>();
                                                     lastMsgObj.put("lastMsg", message.getMessage());
-                                                    lastMsgObj.put("lastMsgTime",date.getTime());
+                                                    lastMsgObj.put("lastMsgTime", date.getTime());
                                                     lastMsgObj.put("senderId", message.getSenderId());
 
                                                     database.getReference().child("chatRooms").child(senderRoom).updateChildren(lastMsgObj);
